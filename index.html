@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<title>TODO APP</title>
 		<style>
 			body{
@@ -13,18 +15,20 @@
 			.container{
 				background: #ffffff;
 				padding: 20px;
-				width: 350px;
+				width: 100%;
+				max-width: 380px;
 				border-radius: 10px;
 			}
 			h2{
 				text-align: center;
 			}
-			input{
-				width: 70%;
-				padding: 8px;
-				border-radius: 5px;
-				border:1px solid #ccc;
-			}
+			input, select{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
 			button{
 				padding: 8px 10px;
 				margin: 5px;
@@ -64,6 +68,26 @@
 }
 .dark .container{ background:#2c2c2c; }
 .dark .task{ background:#3a3a3a; }
+button{
+  width: 100%;
+  margin: 5px 0;
+}
+.task{
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.task div{
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.task button{
+  flex: 1;
+}
+
 
 			@keyframes fadeIn{
 				from{
@@ -75,6 +99,20 @@
 					transform: translateY(0px);
 				}
 			}
+			@media (max-width: 480px){
+  body{
+    margin-top: 20px;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+
+  button{
+    font-size: 14px;
+  }
+}
+
 		</style>
 	</head>
 	<body>
