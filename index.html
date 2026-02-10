@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TODO APP</title>
+		<style>
+			body{
+				font-family: Arial,sans-serif;
+				background: #f4f6f8;
+				display: flex;
+				justify-content: center;
+				margin-top: 60px;
+			}
+			.container{
+				background: #ffffff;
+				padding: 20px;
+				width: 350px;
+				border-radius: 10px;
+			}
+			h2{
+				text-align: center;
+			}
+			input{
+				width: 70%;
+				padding: 8px;
+				border-radius: 5px;
+				border:1px solid #ccc;
+			}
+			button{
+				padding: 8px 10px;
+				margin: 5px;
+				border:none ;
+				border-radius: 5px;
+				cursor: pointer;
+				background: #4CAF50;
+				color: white;
+
+			}
+			button:hover{
+				opacity: 0.85;
+			}
+			.task{
+				background: #f1f1f1;
+				padding: 8px;
+				margin-top:8px ;
+				border-radius: 5px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				animation: fadeIn 0.4s ease-in;
+
+			}
+			.done{
+				text-decoration: line-through;
+				color: gray;
+			}
+			.high { border-left: 5px solid red; }
+.medium { border-left: 5px solid orange; }
+.low { border-left: 5px solid green; }
+
+
+.dark{
+  background:#1e1e1e;
+  color:white;
+}
+.dark .container{ background:#2c2c2c; }
+.dark .task{ background:#3a3a3a; }
+
+			@keyframes fadeIn{
+				from{
+					opacity: 0;
+					transform: translateY(-10px);
+				}
+				to{
+					opacity: 1;
+					transform: translateY(0px);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<button onclick="toggleDarkMode()">Dark Mode</button>
+
+		<input type="text" id="task" placeholder="Enter a Task">
+		<select id="priority">
+  <option value="High">High</option>
+  <option value="Medium">Medium</option>
+  <option value="Low">Low</option>
+</select>
+
+		<button onclick="addTask()">ADD TASK</button>
+		<h2>TODO LIST</h2>
+		<p id="todoList"></p>
+	</div>
+
+	</body>
+	<script>
+		let todoList = document.getElementById("todoList");
+        let task = document.getElementById("task");
+        task.addEventListener("keyup", function(e){
+  if(e.key === "Enter"){
+    addTask();
+  }
+});
+
+		let tasks=[];
+		function addTask(){
+			let taskText=task.value;
+			if(taskText===""){
+				alert("Please Enter a Task");
+				return;
+			}
+			let priority = document.getElementById("priority").value;
+
+  tasks.push({
+  text: taskText,
+  done: false,
+  priority: priority
+});
+
+			task.value="";
+			showTasks();
+			saveTasks();
+		}
+		function showTasks(){
+			let output="";
+			for(let i=0;i<tasks.length;i++){
+				let doneClass = tasks[i].done ? "done" : "";
+                let priorityClass = tasks[i].priority.toLowerCase();
+
+				output += `
+  <div class="task ${priorityClass}">
+    <span class="${doneClass}">
+      ${tasks[i].text} (${tasks[i].priority})
+    </span>
+    <div>
+      <button onclick="toggleDone(${i})">Done</button>
+      <button onclick="editTask(${i})">Edit</button>
+      <button onclick="deleteTask(${i})">Delete</button>
+    </div>
+  </div>
+`;
+
+			}
+			todoList.innerHTML=output;
+		}
+		function deleteTask(index){
+			tasks.splice(index,1);
+			showTasks();
+			saveTasks();
+		}
+		function toggleDone(index) {
+			tasks[index].done=!tasks[index].done;
+			saveTasks();
+			showTasks();// body...
+		}
+		function editTask(index){
+  let newText = prompt("Edit task", tasks[index].text);
+
+  if(newText !== null && newText !== ""){
+    tasks[index].text = newText;
+    saveTasks();
+    showTasks();
+  }
+}
+function saveTasks(){
+	localStorage.setItem("todoTasks",JSON.stringify(tasks));
+}
+function loadTasks(){
+  let data = localStorage.getItem("todoTasks");
+
+  if(data){
+    tasks = JSON.parse(data);
+
+    // ✅ FIX old tasks that have no priority
+    tasks = tasks.map(task => ({
+      text: task.text,
+      done: task.done,
+      priority: task.priority || "Medium"
+    }));
+
+    showTasks();
+  }
+}
+
+
+loadTasks();
+function toggleDarkMode(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("dark") ? "dark" : "light"
+  );
+}
+
+if(localStorage.getItem("theme")==="dark"){
+  document.body.classList.add("dark");
+}
+
+
+
+	</script>
+</html>
